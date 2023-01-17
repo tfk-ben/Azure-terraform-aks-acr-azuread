@@ -1,0 +1,4 @@
+/.terr*
+/comm*
+/terraform.tfs*
+/terraform.tfv*
