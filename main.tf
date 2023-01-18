@@ -35,20 +35,20 @@ resource "azuread_group" "aks_administrators" {
 
 
 
-resource "azurerm_role_assignment" "role_acrpull" {
-  scope                            = azurerm_container_registry.acr.id
-  role_definition_name             = "AcrPull"
-  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity.0.object_id
-  skip_service_principal_aad_check = true
-}
+# resource "azurerm_role_assignment" "role_acrpull" {
+#   scope                            = azurerm_container_registry.acr.id
+#   role_definition_name             = "AcrPull"
+#   principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity.0.object_id
+#   skip_service_principal_aad_check = true
+# }
 
-resource "azurerm_container_registry" "acr" {
-  name                = "myaskrepo"
-  resource_group_name = azurerm_resource_group.aks-rg.name
-  location            = azurerm_resource_group.aks-rg.location
-  sku                 = "Standard"
-  admin_enabled       = false
-}
+# resource "azurerm_container_registry" "acr" {
+#   name                = "myaskrepo"
+#   resource_group_name = azurerm_resource_group.aks-rg.name
+#   location            = azurerm_resource_group.aks-rg.location
+#   sku                 = "Standard"
+#   admin_enabled       = false
+# }
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${azurerm_resource_group.aks-rg.name}-aks-cluser"
@@ -79,7 +79,8 @@ linux_profile {
 
 azure_active_directory_role_based_access_control {
     managed = true
-    admin_group_object_ids = [azuread_group.aks_administrators.id] #object_id
+    admin_group_object_ids = [azuread_group.aks_administrators.object_id] #object_id
+    azure_rbac_enabled = true 
     
 }
 
